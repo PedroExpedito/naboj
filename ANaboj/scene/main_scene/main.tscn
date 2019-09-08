@@ -1,0 +1,284 @@
+[gd_scene load_steps=22 format=2]
+
+[ext_resource path="res://scene/meteoros/meteorespawn.tscn" type="PackedScene" id=1]
+[ext_resource path="res://texture/gamepack/Backgrounds/black.png" type="Texture" id=2]
+[ext_resource path="res://fontes/Freshman.ttf" type="DynamicFontData" id=3]
+[ext_resource path="res://texture/miscellaneous/life.png" type="Texture" id=4]
+[ext_resource path="res://texture/miscellaneous/pixelwhite.png" type="Texture" id=5]
+[ext_resource path="res://scene/enemys/enemyspawn.tscn" type="PackedScene" id=6]
+[ext_resource path="res://scene/aircrafts/nave.tscn" type="PackedScene" id=7]
+[ext_resource path="res://audio/musicfromain.wav" type="AudioStream" id=8]
+
+[sub_resource type="GDScript" id=1]
+resource_name = "parallax_gamera"
+script/source = "extends Camera2D
+
+var speed = 300
+var shake = 0
+
+func _ready():
+	set_process(true)
+	pass
+func _process(delta):
+	if speed < game.score * 2:
+		speed += 100 * delta
+	position.y -= speed * delta	
+	
+	if shake > 0:
+		position.x = cos(rad2deg(shake)) * 20
+		#position.y = sin(rad2deg(shake)) * 2
+		shake -= delta
+
+func shake():
+	shake = 1
+	"
+
+[sub_resource type="DynamicFont" id=2]
+size = 87
+font_data = ExtResource( 3 )
+
+[sub_resource type="GDScript" id=3]
+resource_name = "scorelabel"
+script/source = "extends Label
+
+# Declare member variables here. Examples:
+# var a = 2
+# var b = \"text\"
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	game.connect(\"score_changed\" , self , \"on_score_changed\")
+	pass # Replace with function body.
+func on_score_changed():
+	set_text(str(game.score))
+	pass
+
+"
+
+[sub_resource type="GDScript" id=4]
+resource_name = "Lifes"
+script/source = "extends Node2D
+export(Texture) var texture
+
+func _ready():
+	game.connect(\"life_changed\" , self , \"on_life_changed\")
+	pass
+func on_life_changed():
+	update()
+	pass
+
+func _draw():
+	for n in range( 0 , game.life):
+		draw_texture( texture , Vector2(n * (texture.get_width() +5) + 5, 0))
+	pass"
+
+[sub_resource type="DynamicFont" id=5]
+size = 38
+outline_color = Color( 0.0784314, 0.54902, 0.0352941, 1 )
+font_data = ExtResource( 3 )
+
+[sub_resource type="GDScript" id=6]
+script/source = "extends Label
+
+# Declare member variables here. Examples:
+# var a = 2
+# var b = \"text\"
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+func _process(delta):
+	set_text(str(Engine.get_frames_per_second()))
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(delta):
+#	pass
+"
+
+[sub_resource type="GDScript" id=7]
+script/source = "extends CanvasLayer
+export var cena = \"\"
+func _ready():
+	$paused.visible = false
+func _process(delta):
+	if Input.is_action_just_pressed(\"key_esc\"):
+		if get_tree().paused == false:
+			paused()
+		else:
+			not_paused()
+func not_paused():
+	get_tree().paused = false
+	$paused.visible = false
+	$back_white.visible = false
+	$Button.visible = false
+	$Button2.visible = false
+	$Button3.visible = false
+func paused():
+	if get_tree().paused == false:
+		get_tree().paused = true
+		$paused.visible = true
+		$back_white.visible = true
+		$Button.visible = true
+		$Button2.visible = true
+		$Button3.visible = true
+func _on_Button_pressed():
+	not_paused()
+func _on_Button2_pressed():
+	not_paused()
+	get_tree().change_scene(cena)
+func _on_Button3_pressed():
+	get_tree().quit()
+	pass
+"
+
+[sub_resource type="DynamicFont" id=8]
+size = 130
+font_data = ExtResource( 3 )
+
+[sub_resource type="Shader" id=9]
+code = "shader_type canvas_item;
+
+
+void fragment()
+{
+ vec4 color = textureLod(SCREEN_TEXTURE, SCREEN_UV, 0.0);
+ COLOR.rgb = vec3(dot(color.rgb, vec3(0.5,0.5,0.5)));
+}
+ 
+
+
+"
+
+[sub_resource type="ShaderMaterial" id=10]
+shader = SubResource( 9 )
+
+[sub_resource type="Theme" id=11]
+
+[sub_resource type="DynamicFont" id=12]
+size = 100
+font_data = ExtResource( 3 )
+
+[sub_resource type="GDScript" id=13]
+script/source = "extends AudioStreamPlayer
+func _ready():
+	self.play()
+func _on_audiomusic_finished():
+	self.play()"
+
+[node name="main" type="CanvasLayer"]
+
+[node name="cameraparallax" type="Camera2D" parent="."]
+anchor_mode = 0
+current = true
+script = SubResource( 1 )
+
+[node name="meteorespawn" parent="." instance=ExtResource( 1 )]
+position = Vector2( 4.78333, -339.616 )
+
+[node name="ParallaxBackground" type="ParallaxBackground" parent="."]
+editor/display_folded = true
+
+[node name="space" type="ParallaxLayer" parent="ParallaxBackground"]
+position = Vector2( -0.438904, 14.028 )
+motion_scale = Vector2( 0.5, 1 )
+motion_mirroring = Vector2( 0, 1280 )
+
+[node name="star" type="Sprite" parent="ParallaxBackground/space"]
+position = Vector2( -3.64159, -9.76068 )
+scale = Vector2( 0.57128, 1 )
+texture = ExtResource( 2 )
+centered = false
+
+[node name="hud" type="CanvasLayer" parent="."]
+editor/display_folded = true
+layer = 2
+
+[node name="label" type="Label" parent="hud"]
+margin_left = 443.065
+margin_top = 12.3635
+margin_right = 719.065
+margin_bottom = 217.363
+grow_vertical = 2
+custom_fonts/font = SubResource( 2 )
+text = "0"
+align = 2
+script = SubResource( 3 )
+
+[node name="lifes" type="Node2D" parent="hud"]
+script = SubResource( 4 )
+texture = ExtResource( 4 )
+
+[node name="labelfps" type="Label" parent="hud"]
+margin_left = 642.659
+margin_top = 111.911
+margin_right = 719.659
+margin_bottom = 150.911
+custom_fonts/font = SubResource( 5 )
+custom_colors/font_color = Color( 0.00784314, 1, 0, 1 )
+text = "243"
+script = SubResource( 6 )
+
+[node name="pauser" type="CanvasLayer" parent="."]
+pause_mode = 2
+editor/display_folded = true
+layer = 3
+script = SubResource( 7 )
+cena = "res://scene/main_scene/menu.tscn"
+
+[node name="paused" type="Label" parent="pauser"]
+margin_left = 77.6125
+margin_top = 195.532
+margin_right = 654.612
+margin_bottom = 326.533
+custom_fonts/font = SubResource( 8 )
+text = "PAUSED"
+
+[node name="back_white" type="TextureRect" parent="pauser"]
+visible = false
+material = SubResource( 10 )
+margin_right = 40.0
+margin_bottom = 40.0
+rect_scale = Vector2( 18.0029, 32.0805 )
+texture = ExtResource( 5 )
+expand = true
+
+[node name="Button" type="Button" parent="pauser"]
+visible = false
+margin_left = 73.4081
+margin_top = 378.786
+margin_right = 651.408
+margin_bottom = 485.786
+theme = SubResource( 11 )
+custom_fonts/font = SubResource( 12 )
+text = "Continue"
+
+[node name="Button2" type="Button" parent="pauser"]
+visible = false
+margin_left = 70.4718
+margin_top = 519.73
+margin_right = 648.472
+margin_bottom = 626.73
+custom_fonts/font = SubResource( 12 )
+text = "Menu"
+
+[node name="Button3" type="Button" parent="pauser"]
+visible = false
+margin_left = 70.4718
+margin_top = 648.928
+margin_right = 648.472
+margin_bottom = 755.928
+custom_fonts/font = SubResource( 12 )
+text = "Quit"
+
+[node name="enemyspawn" parent="." instance=ExtResource( 6 )]
+position = Vector2( 370.125, -14.805 )
+
+[node name="nave" parent="." instance=ExtResource( 7 )]
+position = Vector2( 313.466, 1119.47 )
+
+[node name="audiomusic" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 8 )
+script = SubResource( 13 )
+[connection signal="pressed" from="pauser/Button" to="pauser" method="_on_Button_pressed"]
+[connection signal="pressed" from="pauser/Button2" to="pauser" method="_on_Button2_pressed"]
+[connection signal="pressed" from="pauser/Button3" to="pauser" method="_on_Button3_pressed"]
+[connection signal="finished" from="audiomusic" to="audiomusic" method="_on_audiomusic_finished"]

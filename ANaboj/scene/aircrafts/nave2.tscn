@@ -1,0 +1,139 @@
+[gd_scene load_steps=15 format=2]
+
+[ext_resource path="res://script/grypon.gd" type="Script" id=1]
+[ext_resource path="res://texture/gamepack/bgbattleship.png" type="Texture" id=2]
+[ext_resource path="res://texture/miscellaneous/magneticamp/0.png" type="Texture" id=3]
+[ext_resource path="res://texture/miscellaneous/magneticamp/1.png" type="Texture" id=4]
+[ext_resource path="res://texture/miscellaneous/magneticamp/3.png" type="Texture" id=5]
+[ext_resource path="res://audio/Hit_Hurt87.wav" type="AudioStream" id=6]
+[ext_resource path="res://scene/explose/explosão1.tres" type="SpriteFrames" id=7]
+[ext_resource path="res://audio/Explosion3.wav" type="AudioStream" id=8]
+
+[sub_resource type="GDScript" id=4]
+script/source = "extends Area2D
+
+func _ready():
+	add_to_group(game.GROUP_PLAYER)
+	pass 
+
+"
+
+[sub_resource type="SpriteFrames" id=5]
+animations = [ {
+"frames": [ ExtResource( 3 ), ExtResource( 4 ), ExtResource( 5 ) ],
+"loop": true,
+"name": "default",
+"speed": 10.0
+}, {
+"frames": [  ],
+"loop": true,
+"name": "idle",
+"speed": 5.0
+} ]
+
+[sub_resource type="CircleShape2D" id=6]
+radius = 413.737
+
+[sub_resource type="Animation" id=1]
+resource_name = "idle"
+length = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath("sprite:rotation_degrees")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 0.0 ]
+}
+
+[sub_resource type="Animation" id=2]
+length = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath("sprite:rotation_degrees")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ -4.0 ]
+}
+
+[sub_resource type="Animation" id=3]
+length = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath("sprite:rotation_degrees")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 4.0 ]
+}
+
+[node name="nave" type="KinematicBody2D"]
+scale = Vector2( 0.3, 0.3 )
+script = ExtResource( 1 )
+
+[node name="positiontop" type="Position2D" parent="."]
+position = Vector2( 0.109131, -253.41 )
+scale = Vector2( 3.33333, 3.33333 )
+
+[node name="positionleft" type="Position2D" parent="."]
+position = Vector2( -130.447, -57.0123 )
+scale = Vector2( 3.33333, 3.33333 )
+
+[node name="positionright" type="Position2D" parent="."]
+position = Vector2( 132.343, -57.0123 )
+scale = Vector2( 3.33333, 3.33333 )
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+polygon = PoolVector2Array( -49.0021, -156.481, -37.3694, -197.355, 0.0924072, -216.653, 37.5542, -196.219, 43.2302, -151.947, 114.748, -84.9695, 201.221, 73.042, 168.517, 194.737, 94.3041, 177.127, 46.5057, 146.939, -39.0277, 143.165, -162.542, 199.175, -210.095, 82.7886, -111.208, -83.1631 )
+
+[node name="sprite" type="Sprite" parent="."]
+scale = Vector2( 5, 4 )
+texture = ExtResource( 2 )
+
+[node name="aura" type="Area2D" parent="."]
+editor/display_folded = true
+
+[node name="CollisionPolygon2D2" type="CollisionPolygon2D" parent="aura"]
+polygon = PoolVector2Array( -49.0021, -156.481, -37.3694, -197.355, 0.0924072, -216.653, 37.5542, -196.219, 43.2302, -151.947, 114.748, -84.9695, 201.221, 73.042, 168.517, 194.737, 94.3041, 177.127, 46.5057, 146.939, -39.0277, 143.165, -162.542, 199.175, -210.095, 82.7886, -111.208, -83.1631 )
+
+[node name="magneticamp" type="Area2D" parent="."]
+script = SubResource( 4 )
+
+[node name="animsprite2" type="AnimatedSprite" parent="magneticamp"]
+scale = Vector2( 6.90931, 7.27016 )
+frames = SubResource( 5 )
+animation = "idle"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="magneticamp"]
+shape = SubResource( 6 )
+
+[node name="audiohurt" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 6 )
+
+[node name="animsprite" type="AnimatedSprite" parent="."]
+scale = Vector2( 6, 6 )
+frames = ExtResource( 7 )
+animation = "idle"
+playing = true
+
+[node name="audioexplose" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 8 )
+
+[node name="anim" type="AnimationPlayer" parent="."]
+anims/idle = SubResource( 1 )
+anims/rotateleft = SubResource( 2 )
+anims/rotaterigt = SubResource( 3 )
+[connection signal="area_entered" from="aura" to="." method="_on_aura_area_entered"]

@@ -1,0 +1,23 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://script/power_ups.gd" type="Script" id=1]
+[ext_resource path="res://texture/gamepack/PNG/Power-ups/bolt_gold.png" type="Texture" id=2]
+
+[sub_resource type="CapsuleShape2D" id=1]
+height = 10.2942
+
+[node name="power_up_double" type="Area2D"]
+script = ExtResource( 1 )
+weapon = 1
+
+[node name="sprite" type="Sprite" parent="."]
+z_index = -1
+texture = ExtResource( 2 )
+
+[node name="shape" type="CollisionShape2D" parent="."]
+shape = SubResource( 1 )
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 4.0
+autostart = true
+[connection signal="body_entered" from="." to="." method="_on_power_up_double_body_entered"]

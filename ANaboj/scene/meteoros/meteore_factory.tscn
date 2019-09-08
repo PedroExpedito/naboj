@@ -1,0 +1,117 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://script/meteore_factory.gd" type="Script" id=1]
+[ext_resource path="res://script/meteoro.gd" type="Script" id=2]
+[ext_resource path="res://texture/gamepack/PNG/Meteors/meteorGrey_big1.png" type="Texture" id=3]
+[ext_resource path="res://audio/meteireexplose.wav" type="AudioStream" id=4]
+[ext_resource path="res://texture/gamepack/PNG/Meteors/meteorGrey_big2.png" type="Texture" id=5]
+
+[sub_resource type="Animation" id=1]
+resource_name = "hit"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/path = NodePath("sprite:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 1, 1 ), Vector2( 0.3, 0.3 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("sprite:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.4 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+}
+tracks/2/type = "method"
+tracks/2/path = NodePath(".")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0.5 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [  ],
+"method": "queue_free"
+} ]
+}
+
+[sub_resource type="Animation" id=2]
+resource_name = "hit"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/path = NodePath("sprite:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 1, 1 ), Vector2( 0.3, 0.3 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("sprite:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.4 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+}
+
+[node name="meteore_factory" type="Node2D"]
+script = ExtResource( 1 )
+
+[node name="meteoro2" type="Area2D" parent="."]
+position = Vector2( 152.155, 5.36444 )
+script = ExtResource( 2 )
+
+[node name="sprite" type="Sprite" parent="meteoro2"]
+texture = ExtResource( 3 )
+
+[node name="shapepoly" type="CollisionPolygon2D" parent="meteoro2"]
+polygon = PoolVector2Array( 20.3623, -40.7982, 50.291, -2.06689, 33.5662, 30.0625, 8.47888, 28.3019, -21.89, 41.5058, -50.0582, 9.37643, -32.453, -42.5587 )
+
+[node name="anim" type="AnimationPlayer" parent="meteoro2"]
+anims/hit = SubResource( 1 )
+
+[node name="audioexplose" type="AudioStreamPlayer" parent="meteoro2"]
+stream = ExtResource( 4 )
+
+[node name="meteoro3" type="Area2D" parent="."]
+position = Vector2( 371.917, 21.1873 )
+script = ExtResource( 2 )
+
+[node name="sprite" type="Sprite" parent="meteoro3"]
+texture = ExtResource( 5 )
+
+[node name="shapepoly" type="CollisionPolygon2D" parent="meteoro3"]
+polygon = PoolVector2Array( -59.9199, -5.4365, -53.0924, 26.2626, -25.2948, 49.1834, -7.2507, 32.1147, 46.3939, 18.9474, 58.5858, -29.3327, 8.84265, -48.9628, -40.4128, -41.1599 )
+
+[node name="anim" type="AnimationPlayer" parent="meteoro3"]
+anims/hit = SubResource( 2 )
+
+[node name="audioexplose" type="AudioStreamPlayer" parent="meteoro3"]
+stream = ExtResource( 4 )
+autoplay = true
+[connection signal="area_entered" from="meteoro2" to="meteoro2" method="_on_meteoro_area_entered"]
+[connection signal="finished" from="meteoro2/audioexplose" to="meteoro2" method="_on_audioexplose_finished"]
+[connection signal="area_entered" from="meteoro3" to="meteoro3" method="_on_meteoro_area_entered"]
+[connection signal="finished" from="meteoro3/audioexplose" to="meteoro3" method="_on_audioexplose_finished"]

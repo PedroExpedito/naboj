@@ -1,0 +1,122 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://fontes/Freshman.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://texture/miscellaneous/pixelwhite.png" type="Texture" id=2]
+
+[sub_resource type="GDScript" id=7]
+script/source = "extends CanvasLayer
+export var cena = \"\"
+func _ready():
+	$paused.visible = false
+func _process(delta):
+	if Input.is_action_just_pressed(\"key_esc\"):
+		if get_tree().paused == false:
+			paused()
+		else:
+			not_paused()
+func not_paused():
+	get_tree().paused = false
+	$paused.visible = false
+	$back_white.visible = false
+	$Button.visible = false
+	$Button2.visible = false
+	$Button3.visible = false
+func paused():
+	if get_tree().paused == false:
+		get_tree().paused = true
+		$paused.visible = true
+		$back_white.visible = true
+		$Button.visible = true
+		$Button2.visible = true
+		$Button3.visible = true
+func _on_Button_pressed():
+	not_paused()
+func _on_Button2_pressed():
+	not_paused()
+	get_tree().change_scene(cena)
+func _on_Button3_pressed():
+	get_tree().quit()
+	pass
+"
+
+[sub_resource type="DynamicFont" id=8]
+size = 130
+font_data = ExtResource( 1 )
+
+[sub_resource type="Shader" id=9]
+code = "shader_type canvas_item;
+
+
+void fragment()
+{
+ vec4 color = textureLod(SCREEN_TEXTURE, SCREEN_UV, 0.0);
+ COLOR.rgb = vec3(dot(color.rgb, vec3(0.5,0.5,0.5)));
+}
+ 
+
+
+"
+
+[sub_resource type="ShaderMaterial" id=10]
+shader = SubResource( 9 )
+
+[sub_resource type="Theme" id=11]
+
+[sub_resource type="DynamicFont" id=12]
+size = 100
+font_data = ExtResource( 1 )
+
+[node name="pauser" type="CanvasLayer"]
+pause_mode = 2
+editor/display_folded = true
+layer = 3
+script = SubResource( 7 )
+cena = "res://scene/main_scene/menu.tscn"
+
+[node name="paused" type="Label" parent="."]
+margin_left = 77.6125
+margin_top = 195.532
+margin_right = 654.612
+margin_bottom = 326.533
+custom_fonts/font = SubResource( 8 )
+text = "PAUSED"
+
+[node name="back_white" type="TextureRect" parent="."]
+visible = false
+material = SubResource( 10 )
+margin_right = 40.0
+margin_bottom = 40.0
+rect_scale = Vector2( 18.0029, 32.0805 )
+texture = ExtResource( 2 )
+expand = true
+
+[node name="Button" type="Button" parent="."]
+visible = false
+margin_left = 73.4081
+margin_top = 378.786
+margin_right = 651.408
+margin_bottom = 485.786
+theme = SubResource( 11 )
+custom_fonts/font = SubResource( 12 )
+text = "Continue"
+
+[node name="Button2" type="Button" parent="."]
+visible = false
+margin_left = 70.4718
+margin_top = 519.73
+margin_right = 648.472
+margin_bottom = 626.73
+custom_fonts/font = SubResource( 12 )
+text = "Menu"
+
+[node name="Button3" type="Button" parent="."]
+visible = false
+margin_left = 70.4718
+margin_top = 648.928
+margin_right = 648.472
+margin_bottom = 755.928
+custom_fonts/font = SubResource( 12 )
+text = "Quit"
+[connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]
+[connection signal="pressed" from="Button2" to="." method="_on_Button2_pressed"]
+[connection signal="pressed" from="Button3" to="." method="_on_Button3_pressed"]

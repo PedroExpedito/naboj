@@ -1,0 +1,100 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://fontes/Freshman.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://audio/musicfrommenu.wav" type="AudioStream" id=2]
+[ext_resource path="res://texture/gamepack/Backgrounds/black.png" type="Texture" id=3]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Control
+export var cena = \"\"
+
+func _ready():
+	$audio.play()
+	pass 
+
+
+func _on_Play_pressed():
+	get_tree().change_scene(cena)
+	pass # Replace with function body.
+
+
+func _on_Play3_pressed():
+	get_tree().quit()
+	pass # Replace with function body.
+
+
+func _on_audio_finished():
+	$audio.play()
+	pass # Replace with function body.
+"
+
+[sub_resource type="DynamicFont" id=2]
+size = 100
+font_data = ExtResource( 1 )
+
+[sub_resource type="DynamicFont" id=3]
+size = 80
+font_data = ExtResource( 1 )
+
+[node name="Menu" type="Node2D"]
+
+[node name="menu" type="Control" parent="."]
+margin_left = 373.414
+margin_top = 207.132
+margin_right = 373.414
+margin_bottom = 207.132
+script = SubResource( 1 )
+cena = "res://scene/main_scene/main.tscn"
+
+[node name="Label" type="Label" parent="menu"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -161.5
+margin_top = 166.157
+margin_right = 161.5
+margin_bottom = 371.157
+custom_fonts/font = SubResource( 2 )
+text = "Naboj
+"
+
+[node name="Play" type="Button" parent="menu"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -115.0
+margin_top = 319.726
+margin_right = 115.0
+margin_bottom = 406.726
+custom_fonts/font = SubResource( 3 )
+text = "Play"
+
+[node name="Play2" type="Button" parent="menu"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -140.5
+margin_top = 438.05
+margin_right = 140.5
+margin_bottom = 525.05
+custom_fonts/font = SubResource( 3 )
+text = "Config"
+
+[node name="Play3" type="Button" parent="menu"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -140.5
+margin_top = 556.374
+margin_right = 140.5
+margin_bottom = 643.374
+custom_fonts/font = SubResource( 3 )
+text = "Quit"
+
+[node name="audio" type="AudioStreamPlayer" parent="menu"]
+stream = ExtResource( 2 )
+
+[node name="sprite" type="Sprite" parent="."]
+scale = Vector2( 0.562062, 1 )
+z_index = -1
+texture = ExtResource( 3 )
+centered = false
+[connection signal="pressed" from="menu/Play" to="menu" method="_on_Play_pressed"]
+[connection signal="pressed" from="menu/Play3" to="menu" method="_on_Play3_pressed"]
+[connection signal="finished" from="menu/audio" to="menu" method="_on_audio_finished"]

@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://script/grypon.gd" type="Script" id=1]
+[ext_resource path="res://texture/aircraft/grypon.png" type="Texture" id=2]
+
+[node name="main" type="Node2D"]
+
+[node name="KinematicBody2D" type="KinematicBody2D" parent="."]
+position = Vector2( 330.952, 1094.69 )
+scale = Vector2( 0.3, 0.3 )
+script = ExtResource( 1 )
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="KinematicBody2D"]
+polygon = PoolVector2Array( -0.223907, 11.32, -81.5623, 62.512, -40.0399, 42.0352, -150.387, 187.079, -154.938, 131.906, -161.194, 143.85, -160.122, 262.291, -149.314, 262.291, -153.296, 233.282, -49.7743, 241.246, -36.6919, 254.328, -8.25192, 348.749, 12.7937, 350.455, 39.1159, 252.571, 57.3931, 240.596, 158.323, 234.924, 156.432, 261.394, 166.516, 260.134, 167.146, 141.647, 160.214, 131.563, 157.062, 144.168, 157.693, 186.394, 44.0507, 42.7595, 51.9267, 41.3696, 87.6001, 63.6076, 89.4532, 44.6127, 34.8873, -45.6192, 21.8049, -50.7384, 20.0985, -133.47, 3.60326, -198.313, -13.4607, -136.883, -15.7359, -48.15, -31.0936, -44.1684, -82.0926, 45.072, -82.791, 63.2288 )
+
+[node name="Sprite" type="Sprite" parent="KinematicBody2D"]
+texture = ExtResource( 2 )

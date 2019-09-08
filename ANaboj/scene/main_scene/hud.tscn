@@ -1,0 +1,94 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://fontes/Freshman.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://texture/miscellaneous/life.png" type="Texture" id=2]
+
+[sub_resource type="DynamicFont" id=2]
+size = 87
+font_data = ExtResource( 1 )
+
+[sub_resource type="GDScript" id=3]
+resource_name = "scorelabel"
+script/source = "extends Label
+
+# Declare member variables here. Examples:
+# var a = 2
+# var b = \"text\"
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	game.connect(\"score_changed\" , self , \"on_score_changed\")
+	pass # Replace with function body.
+func on_score_changed():
+	set_text(str(game.score))
+	pass
+
+"
+
+[sub_resource type="GDScript" id=4]
+resource_name = "Lifes"
+script/source = "extends Node2D
+export(Texture) var texture
+
+func _ready():
+	game.connect(\"life_changed\" , self , \"on_life_changed\")
+	pass
+func on_life_changed():
+	update()
+	pass
+
+func _draw():
+	for n in range( 0 , game.life):
+		draw_texture( texture , Vector2(n * (texture.get_width() +5) + 5, 0))
+	pass"
+
+[sub_resource type="DynamicFont" id=5]
+size = 38
+outline_color = Color( 0.0784314, 0.54902, 0.0352941, 1 )
+font_data = ExtResource( 1 )
+
+[sub_resource type="GDScript" id=6]
+script/source = "extends Label
+
+# Declare member variables here. Examples:
+# var a = 2
+# var b = \"text\"
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+func _process(delta):
+	set_text(str(Engine.get_frames_per_second()))
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(delta):
+#	pass
+"
+
+[node name="hud" type="CanvasLayer"]
+editor/display_folded = true
+layer = 2
+
+[node name="label" type="Label" parent="."]
+margin_left = 443.065
+margin_top = 12.3635
+margin_right = 719.065
+margin_bottom = 217.363
+grow_vertical = 2
+custom_fonts/font = SubResource( 2 )
+text = "0"
+align = 2
+script = SubResource( 3 )
+
+[node name="lifes" type="Node2D" parent="."]
+script = SubResource( 4 )
+texture = ExtResource( 2 )
+
+[node name="labelfps" type="Label" parent="."]
+margin_left = 642.659
+margin_top = 111.911
+margin_right = 719.659
+margin_bottom = 150.911
+custom_fonts/font = SubResource( 5 )
+custom_colors/font_color = Color( 0.00784314, 1, 0, 1 )
+text = "243"
+script = SubResource( 6 )

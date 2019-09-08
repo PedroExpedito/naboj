@@ -1,0 +1,15 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://paths/loop.tres" type="Curve2D" id=1]
+[ext_resource path="res://script/path_enemy.gd" type="Script" id=2]
+[ext_resource path="res://scene/enemys/inimigo01.tscn" type="PackedScene" id=3]
+
+[node name="path_enemy" type="Path2D"]
+curve = ExtResource( 1 )
+script = ExtResource( 2 )
+
+[node name="path_fallow" type="PathFollow2D" parent="."]
+position = Vector2( 37.0921, -15.9261 )
+rotate = false
+
+[node name="enemy01" parent="path_fallow" instance=ExtResource( 3 )]
